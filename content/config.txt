@@ -1,0 +1,2 @@
+mode:console
+language:ENG
