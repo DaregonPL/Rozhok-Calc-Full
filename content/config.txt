@@ -1,2 +1,4 @@
-mode:console
+mode:installation
 language:ENG
+debug:0
+divisorLimit:1000000000
