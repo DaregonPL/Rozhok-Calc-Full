@@ -1,9 +1,9 @@
 '''
-Rozhok Calc (console) v1.4
+Rozhok Calc (console) v1.5
         by DaregonPL
 '''
 def main(): # just main. im not gonna describe that
-    global br, diction, actions, debug
+    global br, diction, actions, debug, divise
     print('\n' + diction[0] + ':\n |')
 #                                   PRINTING POSSIBLE ACTIONS
     for x in actions:
@@ -26,17 +26,43 @@ def main(): # just main. im not gonna describe that
         
     if ans in diction[3]:
         settings()
-        
+
+    elif ans == '?div':
+        if divise:
+            for x in divise:
+                print(x, end=' ')
+    
     elif ans.upper() in diction[8]:
         br = False
     
     elif act == '' and ans != '':
-        print(diction[4])
+        chech = 0
+        for x in ans:
+            if x in ['+', '-', '*', '/', '%', '(', ')', ' '] or x.isdigit():
+                chech += 1
+        if chech == len(ans):
+            execdict = {'ans' : ans, 'res' : 0}
+            try:
+                exec('res = ' + ans, execdict)
+                print(execdict['res'])
+            except:
+                print(diction[5])
+        elif ans[0] == '?':
+            alis = list(ans)
+            alis.remove('?')
+            nnn = ''
+            for num in alis:
+                nnn += num
+            if nnn.isdigit():
+                analisys(int(nnn))
+        else:
+            print(diction[4])
         
     else:
         a, b = getnum(act)
 #                                   ALL MATH ACTIONS
         try:
+        #if 1:
             if a != 'break' and not (act in ['^/', '>>|', '?']):  # REGULAR math actions, which matches with special symbols
                 rdict = {'res' : 0, 'a' : a, 'act' : act, 'b' : b}
                 exec('res = a ' + act + ' b', rdict)
@@ -50,36 +76,43 @@ def main(): # just main. im not gonna describe that
                 print(a, '<|>', b, '<[10]> ', int(str(a), b))
                 
             elif a != 'break' and act == '?':    # Analysis
-                print('\n  ' + str(a) + diction[9][5])
-                
-                long = len(str(a))  #1
-                if '.' in str(a):
-                    long -= 1
-                if str(a)[-1] == '0':
-                    long -= 1
-                parity = True       #3
-                if a % 2:
-                    parity = False
-                summ = 0
-                for x in str(round(a)):
-                    summ += int(x)
-                print(diction[1], long)
-                print(diction[9][0], parity)
-                print(diction[9][1], summ)
-                divisors = ''       #4
-                for d in get_decimals(a):
-                    if divisors == '':
-                        divisors = str(d)
-                    else:
-                        divisors += ' ' + str(d)
-#                                           OUTPUT ANALISYS RESULT
-                print(diction[9][2], divisors)
-                print(diction[9][3], a ** (0.5))
-                print(diction[9][4], a ** (1 / 3))
+                analisys(a)
         except:
-            print(diction[5])
+            print('\n' + diction[5])
 
 #                                   UTILITE DIFITIONS
+def analisys(a):
+    global divise, diction
+    print('\n  ' + str(a) + diction[9][5])
+    
+    long = len(str(a))  #1
+    if '.' in str(a):
+        long -= 1
+    if str(a)[-1] == '0':
+        long -= 1
+    parity = True       #3
+    if a % 2:
+        parity = False
+    summ = 0
+    for x in str(round(a)):
+        summ += int(x)
+    divisors = ''       #4
+    divise = get_decimals(a)
+    if len(divise) < 6:
+        for d in divise:
+            if divisors == '':
+                divisors = str(d)
+            else:
+                divisors += ' ' + str(d)
+    else:
+        divisors = 'Type "?div" to see all the divisors (' + str(len(divise)) + ' found)'
+#                                           OUTPUT ANALISYS RESULT
+    print(diction[1], long)
+    print(diction[9][0], parity)
+    print(diction[9][1], summ)
+    print(diction[9][2], divisors)
+    print(diction[9][3], a ** (0.5))
+    print(diction[9][4], a ** (1 / 3))
 
 def getnum(act): #get numbers. just function. y im doin this??? ----- this is bcz i can
     a, b = 0, 0
@@ -132,7 +165,7 @@ def settings():
                 pass
         elif ans in sactions[2]: # INSTALL RESET
             with open('content/config.txt', 'w') as confile:
-                confile.write('mode:installation\nlanguage:ENG\ndebug:0\ndivisorLimit:1000000000')
+                confile.write('mode:installation\nlanguage:ENG\ndebug:0\ndivisorLimit:10000000')
             print('\nINSTALLATION RESET\nRestart the program')
             br = False
             brs = False
@@ -140,27 +173,56 @@ def settings():
             brs = False
 
 def get_decimals(num):
-    global debug, divisorLimit, diction
+    global debug, divisorLimit, diction, lenpers
     cur = 1
     dec = []
-    #try:
-    if 1:
-        int(num)
-        while cur <= num:
+    try:
+        num = int(num)
+        percent = 0
+        lenpers = 10
+        if num >= 1000000000:
+            lenpers = 1000
+            print('Press Ctrl+C to break 1000=')
+            print('_' * 100)
+        elif num >= 1000000:
+            lenpers = 100
+            print('Press Ctrl+C to break 100=')
+        if lenpers != 1000:
+            print('_' * lenpers)
+        while cur <= num: # Main cycle
             if int(debug):
                 print('\n', cur, 'checking with LIMIT ', divisorLimit, end='')
-            if num % cur == 0:
-                num = num // cur
+            if int(num) % cur == 0: #adding divisor
                 dec += [cur]
                 if int(debug):
                     print('    TRUE')
-            if cur > int(divisorLimit) and int(divisorLimit) != (-1):
+            if int(cur / num * lenpers) != percent: #Percent Controller
+                if lenpers == 1000 and percent % 100 == 0:
+                    if percent != 0:
+                        print('|>', str(perce(percent)) + '%')
+                        print('_' * 100)
+                percent += 1
+                print('=', end='')
+            if cur > int(divisorLimit) and divisorLimit != '-1': # Checking divisor limit
+                print('|>', str(perce(percent)) + '%')
                 print('  < ! > ' + diction[12], '(' + divisorLimit + ')')
                 break
             cur += 1
-    #except:
-     #   pass
+        if percent == lenpers:
+            print('|>', str(perce(percent)) + '%')
+        print('')
+    except:
+        print('|>', str(perce(percent)) + '%')
     return dec
+
+def perce(percent):
+    global lenpers
+    if lenpers == 1000:
+        return percent / 10
+    elif lenpers == 100:
+        return percent
+    elif lenpers == 10:
+        return percent * 10
 
 def setConfig(name, value):
     global debug
@@ -185,7 +247,7 @@ def harmed(error=None):
     if error:
         print('                 Error:', error, '\n')
     print('             Try to download configuration file from github:')
-    print('         - find a v1.4 release on  github.com/DaregonPL/Rozhok-Calc-Full')
+    print('         - find a v1.5 release on  github.com/DaregonPL/Rozhok-Calc-Full')
     print('         - download source code')
     print('         - copy file "content/config.txt" to current directory')
     print('         - restart the program')
@@ -193,13 +255,13 @@ def harmed(error=None):
     ans = input()
     if ans == 'reset':
         with open('content/config.txt', 'w') as confile:
-            confile.write('mode:installation\nlanguage:ENG\ndebug:0\ndivisorLimit:1000000000')
+            confile.write('mode:installation\nlanguage:ENG\ndebug:0\ndivisorLimit:10000000')
         print('\nINSTALLATION RESET\nRestart the program')
 
 #                   # cycle      ------ F  O  R  E  V  E  R ------ 
 def s():
-    global br
-    print('Welcome to RozhokCalc!       v1.4')
+    global br, divise
+    print('Welcome to RozhokCalc!       v1.5')
     br = True
     while br:
         main()
@@ -221,6 +283,7 @@ except:
     working = False
 
 if working:
+    divise=[]
     if language == 'RUS':
         from content.RUS import diction, actions, sactions
     elif language == 'ARB':
@@ -243,7 +306,8 @@ if working:
                 mode = 'console'
                 ibr = 0
             elif ans in modes[1]:
-                mode = 'window'
+                print('Sorry, this mode will be aviable in version 2.0\nSet mode: console')
+                mode = 'console'
                 ibr = 0
         setConfig('mode', mode)
         from content.ENG import diction, actions, sactions

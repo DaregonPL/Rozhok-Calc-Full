@@ -1,4 +1,4 @@
 mode:installation
 language:ENG
 debug:0
-divisorLimit:1000000000
+divisorLimit:10000000
