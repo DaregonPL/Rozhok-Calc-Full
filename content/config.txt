@@ -1,4 +1,0 @@
-mode:installation
-language:ENG
-debug:0
-divisorLimit:10000000
