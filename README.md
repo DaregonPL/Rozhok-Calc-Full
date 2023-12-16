@@ -1,7 +1,7 @@
 # Rozhok-Calc-Full
 Description. If you need more description, go here: https://youtu.be/dQw4w9WgXcQ?si=Jrqjc2P-gHg_1RuV
 
-Launch file "RozhokCalc_v1.4.py" with CMD, IDLE or something else
+Launch file "RozhokCalc.py" with CMD, IDLE or something else
 
 This Project has some interesting features as:
 - Number detailed analisys
