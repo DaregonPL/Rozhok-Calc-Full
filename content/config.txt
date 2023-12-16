@@ -1,0 +1,8 @@
+
+mode:installation
+language:ENG
+debug:0
+divisorLimit:10000000
+hideMenu:0
+# modes aviable : installation/console/window
+# languages : ENG/RUS/ARB

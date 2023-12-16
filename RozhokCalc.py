@@ -1,21 +1,27 @@
 '''
-Rozhok Calc (console) v1.5
+Rozhok Calc (console) v1.6
         by DaregonPL
 '''
 def main(): # just main. im not gonna describe that
-    global br, diction, actions, debug, divise
-    print('\n' + diction[0] + ':\n |')
+    global br, diction, actions, debug, divise, \
+           keyWordDict, tutorial, firststart, hideMenu
 #                                   PRINTING POSSIBLE ACTIONS
-    for x in actions:
-        print(x[2] + '. ' + x[0])
-    print(diction[2])
-    print(diction[7])
+    if (hideMenu == '1' and firststart) or (hideMenu == '0'):
+        print('\n' + diction['Choose action'] + ':\n |')
+        for x in actions:
+            x = actions[x]
+            print(x[2] + '. ' + x[0])
+        print(diction['Settings'])
+        print(diction['Help'][0] + '. ' + diction['Help'][1])
+        print(diction['ListEnd'])
+    firststart = False
 #                                   WORK WITH INPUT(s)
     ans = input('|] ')
     print('')
     act = ''
 
     for now in actions:
+        now = actions[now]
         for element in now:
             if ans.upper() == element.upper():
                 act = now[1]
@@ -24,29 +30,81 @@ def main(): # just main. im not gonna describe that
             elif ans.upper() != element.upper() and int(debug):
                 print(ans.upper()+' ?= '+element.upper())
         
-    if ans in diction[3]:
+    if ans in diction['SettingsA']:
         settings()
+
+    elif ans in diction['Help']:
+        print('\n' + diction['Choose action'] + ':\n |')
+        for z in diction['HelpList']:
+            print(z[0] + '. ' + z[1])
+        print(diction['ListEnd'])
+        ans = input('|?] ')
+        print('')
+        if ans in diction['HelpList'][0]:
+            for x in tutorial:
+                print(x['Text'])
+                if x['Input']:
+                    for y in x['Input']:
+                        if x['Answers']:
+                            while 1:
+                                if input(y) in x['Answers']:
+                                    break
+                        else:
+                            if x['Title'] == 'Math action':
+                                if y == '|a-> ':
+                                    while 1:
+                                        a = input(y)
+                                        if a.isdigit():
+                                            break
+                                elif y == 'a + ':
+                                    while 1:
+                                        b = input(y)
+                                        if b.isdigit():
+                                            print(a, '+', b, '=', int(a) + int(b))
+                                            break
+                            elif x['Title'] == 'FastCalc':
+                                while 1:
+                                    a = input(y)
+                                    chech = 0
+                                    for b in a:
+                                        if b in ['+', '-', '*', '/', '%', '(', ')', ' ', '.'] or b.isdigit():
+                                            chech += 1
+                                    if chech == len(a):
+                                        break
+                                execdict = {'a' : a, 'res' : 0}
+                                try:
+                                    exec('res = ' + a, execdict)
+                                    print(a + ' = ' + str(execdict['res']))
+                                except:
+                                    print(diction['MathError'])
+        elif ans in diction['HelpList'][1]:
+            print(diction['Functions'])
+        elif ans in diction['HelpList'][2]:
+            print(diction['About'])
 
     elif ans == '?div':
         if divise:
             for x in divise:
                 print(x, end=' ')
+
+    elif ans in keyWordDict:
+        print(keyWordDict[ans])
     
-    elif ans.upper() in diction[8]:
+    elif ans.upper() in diction['ExitList']:
         br = False
     
     elif act == '' and ans != '':
         chech = 0
         for x in ans:
-            if x in ['+', '-', '*', '/', '%', '(', ')', ' '] or x.isdigit():
+            if x in ['+', '-', '*', '/', '%', '(', ')', ' ', '.'] or x.isdigit():
                 chech += 1
         if chech == len(ans):
             execdict = {'ans' : ans, 'res' : 0}
             try:
                 exec('res = ' + ans, execdict)
-                print(execdict['res'])
+                print(ans + ' = ' + str(execdict['res']))
             except:
-                print(diction[5])
+                print(diction['MathError'])
         elif ans[0] == '?':
             alis = list(ans)
             alis.remove('?')
@@ -56,8 +114,7 @@ def main(): # just main. im not gonna describe that
             if nnn.isdigit():
                 analisys(int(nnn))
         else:
-            print(diction[4])
-        
+            print(diction['InputError'])
     else:
         a, b = getnum(act)
 #                                   ALL MATH ACTIONS
@@ -78,12 +135,12 @@ def main(): # just main. im not gonna describe that
             elif a != 'break' and act == '?':    # Analysis
                 analisys(a)
         except:
-            print('\n' + diction[5])
+            print('\n' + diction['MathError'])
 
 #                                   UTILITE DIFITIONS
 def analisys(a):
     global divise, diction
-    print('\n  ' + str(a) + diction[9][5])
+    print('\n  ' + str(a) + diction['Analisys'][5])
     
     long = len(str(a))  #1
     if '.' in str(a):
@@ -98,21 +155,21 @@ def analisys(a):
         summ += int(x)
     divisors = ''       #4
     divise = get_decimals(a)
-    if len(divise) < 6:
+    if len(divise) < 10:
         for d in divise:
             if divisors == '':
                 divisors = str(d)
             else:
                 divisors += ' ' + str(d)
     else:
-        divisors = 'Type "?div" to see all the divisors (' + str(len(divise)) + ' found)'
+        divisors = diction['DivisorWarning'][0] + str(len(divise)) + diction['DivisorWarning'][1]
 #                                           OUTPUT ANALISYS RESULT
-    print(diction[1], long)
-    print(diction[9][0], parity)
-    print(diction[9][1], summ)
-    print(diction[9][2], divisors)
-    print(diction[9][3], a ** (0.5))
-    print(diction[9][4], a ** (1 / 3))
+    print(diction['Number of digits'], long)
+    print(diction['Analisys'][0], parity)
+    print(diction['Analisys'][1], summ)
+    print(diction['Analisys'][2], divisors)
+    print(diction['Analisys'][3], a ** (0.5))
+    print(diction['Analisys'][4], a ** (1 / 3))
 
 def getnum(act): #get numbers. just function. y im doin this??? ----- this is bcz i can
     a, b = 0, 0
@@ -130,47 +187,68 @@ def getnum(act): #get numbers. just function. y im doin this??? ----- this is bc
     return [a, b]
 
 def settings():
-    global diction, sactions, language, mode, br
+    global diction, sactions, language, mode, br, \
+           installdata, hideMenu, divisorLimit, firststart
     brs = True
+    setShow = True
     while brs:
-        print('\n' + diction[0] + ':\n |')
-        for x in sactions:
-            print(x[1] + '. ' + x[0])
-        print(diction[7])
-        ans = input('|] ')
-        if ans in sactions[0]: # CHANGING LANGUAGE
-            print(diction[6])
-            for x in sactions[0][2]:
+        if (hideMenu == '1' and setShow) or (hideMenu == '0'):
+            print('\n' + diction['Choose action'] + ':\n |')
+            for x in sactions:
+                title = x
+                x = sactions[x]
+                if title == 'Hide Menu':
+                    print(x[1] + '. ' + x[0] + ' ' * (20 - len(x[0])) + ': ' + x[2][hideMenu])
+                elif title == 'Divisor Limit':
+                    print(x[1] + '. ' + x[0] + ' ' * (20 - len(x[0])) + ': ' + divisorLimit)
+                elif title == 'Language':
+                    print(x[1] + '. ' + x[0] + ' ' * (20 - len(x[0])) + ': ' + language)
+                else:
+                    print(x[1] + '. ' + x[0])
+            print(diction['ListEnd'])
+        ans = input('|*] ')
+        if ans in sactions['Language']: # CHANGING LANGUAGE
+            print(diction['ChooseLanguage'])
+            for x in sactions['Language'][2]:
                 print(x[1] + '. ' + x[0])
-            print(diction[7])
+            print(diction['ListEnd'])
             ans = input('|] ')
-            for x in sactions[0][2]:
+            for x in sactions['Language'][2]:
                 if ans in x:
                     language = x[0]
             setConfig('language', language)
-            print(diction[10], language)
-            print(diction[11])
+            print(diction['LangSet'], language)
+            print(diction['Restart'])
             br = False
             brs = False
-        elif ans in sactions[1]: # DIVISORS LIMIT
-            print('\n' + sactions[1][2][0] + '\n')
+        elif ans in sactions['Divisor Limit']: # DIVISORS LIMIT
+            print('\n' + sactions['Divisor Limit'][2][0] + '\n')
             ans = input('|] ')
             try:
                 intans = int(ans)
                 setConfig('divisorLimit', ans)
                 br = False
                 brs = False
-                print('\n' + diction[11])
+                print('\n' + diction['Restart'])
             except:
                 pass
-        elif ans in sactions[2]: # INSTALL RESET
+        elif ans in sactions['Hide Menu']: #Hide menu
+            if int(hideMenu):
+                setConfig('hideMenu', '0')
+            else:
+                setConfig('hideMenu', '1')
+            print(diction['Restart'])
+            br, brs = False, False
+        elif ans in sactions['Reset Installation']: # INSTALL RESET
             with open('content/config.txt', 'w') as confile:
-                confile.write('mode:installation\nlanguage:ENG\ndebug:0\ndivisorLimit:10000000')
+                confile.write(installdata)
             print('\nINSTALLATION RESET\nRestart the program')
             br = False
             brs = False
-        elif ans.upper() in diction[8]:
+        elif ans.upper() in diction['ExitList']:
             brs = False
+            firststart = True
+        setShow = False
 
 def get_decimals(num):
     global debug, divisorLimit, diction, lenpers
@@ -182,11 +260,11 @@ def get_decimals(num):
         lenpers = 10
         if num >= 1000000000:
             lenpers = 1000
-            print('Press Ctrl+C to break 1000=')
+            print(diction['CtrlC Break'] + ' 1000=')
             print('_' * 100)
         elif num >= 1000000:
             lenpers = 100
-            print('Press Ctrl+C to break 100=')
+            print(diction['CtrlC Break'] + ' 100=')
         if lenpers != 1000:
             print('_' * lenpers)
         while cur <= num: # Main cycle
@@ -205,7 +283,7 @@ def get_decimals(num):
                 print('=', end='')
             if cur > int(divisorLimit) and divisorLimit != '-1': # Checking divisor limit
                 print('|>', str(perce(percent)) + '%')
-                print('  < ! > ' + diction[12], '(' + divisorLimit + ')')
+                print('  < ! > ' + diction['DivisorLimitBreak'], '(' + divisorLimit + ')')
                 break
             cur += 1
         if percent == lenpers:
@@ -241,39 +319,62 @@ def setConfig(name, value):
         print(context)
     with open('content/config.txt', 'w') as confile:
         confile.write(context)
-
+    
 def harmed(error=None):
+    global installdata
     print(' ----  Y O U R   C O N F I G U R A T I O N   F I L E   W A S   H A R M E D  ----\a\n')
     if error:
         print('                 Error:', error, '\n')
+    print('                         Type "reset" to reset installation"\n                     Or:\n')
     print('             Try to download configuration file from github:')
-    print('         - find a v1.5 release on  github.com/DaregonPL/Rozhok-Calc-Full')
+    print('         - find a v1.6 release on  github.com/DaregonPL/Rozhok-Calc-Full')
     print('         - download source code')
     print('         - copy file "content/config.txt" to current directory')
     print('         - restart the program')
-    print('\nOr type "reset" to reset installation"')
     ans = input()
     if ans == 'reset':
         with open('content/config.txt', 'w') as confile:
-            confile.write('mode:installation\nlanguage:ENG\ndebug:0\ndivisorLimit:10000000')
+            confile.write(installdata)
         print('\nINSTALLATION RESET\nRestart the program')
 
 #                   # cycle      ------ F  O  R  E  V  E  R ------ 
 def s():
-    global br, divise
-    print('Welcome to RozhokCalc!       v1.5')
+    global br, divise, firststart
+    print('Welcome to RozhokCalc!       v1.6')
+    firststart = True
     br = True
     while br:
         main()
 
 #                                   P R E P A R I N G
 
+installdata =\
+'''
+mode:installation
+language:ENG
+debug:0
+divisorLimit:10000000
+hideMenu:0
+# modes aviable : installation/console/window
+# languages : ENG/RUS/ARB'''
+
+# CONFIGURATIONS
+
 with open('content/config.txt', 'r') as file:
     txt = file.read()
 for config in txt.split('\n'):
-    if config != '':
+    if config != '' and config[0] != '#':
         varData = config.split(':')
         exec(varData[0] + ' = "' + varData[1] + '"')
+        print((varData[0] + '\n') * 0, end='')
+
+# KeyWords
+
+with open('content/KeyWords.dictionary', 'r') as keys:
+    dictStr = ''
+    for key in keys.read().split('\n'):
+        dictStr += ', ' * int(bool(dictStr)) + '"' + key.split(':')[0] + '":"' + key.split(':')[1] + '"'
+    exec('keyWordDict = {' + dictStr + '}')
 
 try:
     working = True
@@ -285,16 +386,16 @@ except:
 if working:
     divise=[]
     if language == 'RUS':
-        from content.RUS import diction, actions, sactions
+        from content.languages.RUS import *
     elif language == 'ARB':
-        from content.ARB import diction, actions, sactions
+        from content.languages.ARB import *
     else:
-        from content.ENG import diction, actions, sactions
+        from content.languages.ENG import *
 
     if mode == 'console':
         s()
     elif mode == 'installation':
-        print('Welcome to RozhokCalc v1.3 installation wizard!')
+        print('Welcome to RozhokCalc v1.6 installation wizard!')
         ibr = True
         modes = [['Console', '1'], ['Window', '2']]
         while ibr:
@@ -310,7 +411,7 @@ if working:
                 mode = 'console'
                 ibr = 0
         setConfig('mode', mode)
-        from content.ENG import diction, actions, sactions
+        from content.languages.ENG import *
         print('Installation complete')
         if mode == 'console':
             s()
