@@ -1,5 +1,5 @@
 
-mode:installation
+mode:console
 language:ENG
 debug:0
 divisorLimit:10000000

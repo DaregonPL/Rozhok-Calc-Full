@@ -1,0 +1,22 @@
+RozhokCalc.py:84:33: E722 do not use bare 'except'
+RozhokCalc.py:114:13: E722 do not use bare 'except'
+RozhokCalc.py:147:9: E722 do not use bare 'except'
+RozhokCalc.py:194:9: E722 do not use bare 'except'
+RozhokCalc.py:199:9: E722 do not use bare 'except'
+RozhokCalc.py:250:13: E722 do not use bare 'except'
+RozhokCalc.py:312:5: E722 do not use bare 'except'
+RozhokCalc.py:409:1: E722 do not use bare 'except'
+
+I need to use exceptions
+
+
+RozhokCalc.py:416:9: F403 'from content.languages.RUS import *' used; unable to detect undefined names
+RozhokCalc.py:417:10: F405 'language' may be undefined, or defined from star imports: content.languages.RUS
+RozhokCalc.py:418:9: F403 'from content.languages.ARB import *' used; unable to detect undefined names
+RozhokCalc.py:420:9: F403 'from content.languages.ENG import *' used; unable to detect undefined names
+RozhokCalc.py:422:8: F405 'mode' may be undefined, or defined from star imports: content.languages.ARB, content.languages.ENG, content.languages.RUS
+RozhokCalc.py:424:10: F405 'mode' may be undefined, or defined from star imports: content.languages.ARB, content.languages.ENG, content.languages.RUS
+RozhokCalc.py:442:9: F403 'from content.languages.ENG import *' used; unable to detect undefined names
+RozhokCalc.py:449:9: F401 'content.window' imported but unused
+
+Thats a hard work with languages and modes (only one's working)

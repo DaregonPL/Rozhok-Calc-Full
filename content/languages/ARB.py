@@ -4,6 +4,9 @@ diction = {'Choose action' : 'Choose an action',
            'Settings' : ' |\n11. Settings',
            'SettingsA' : ['11', 'Settings'],
            'Help' : ['12', 'Help'],
+           'HelpList' : [['1', 'Tutorial'], ['2', 'Functions'], ['3', 'About']],
+           'Functions' : '''this is calculator. google what calculator does''',
+           'About' : '''Made by Vovochka''',
            'InputError' : 'Wrong Number Entered: input not in action list',
            'MathError' : 'Math Error: Unable to solve',
            'ChooseLanguage' : '\nChoose a language:\n |',
@@ -16,8 +19,7 @@ diction = {'Choose action' : 'Choose an action',
            'Restart' : 'Restart the program',
            'DivisorLimitBreak' : 'Breaking: Reached Divisor Limit',
            'DivisorWarning' : ['Type "?div" to see all the divisors (', ' found)'],
-           'CtrlC Break' : 'Press Ctrl+C to break',
-           'HelpList' : [['1', 'Tutorial']]
+           'CtrlC Break' : 'Press Ctrl+C to break'
            }
 
 actions = {'Summation' : ['Summation', '+', '1'],
@@ -33,4 +35,5 @@ actions = {'Summation' : ['Summation', '+', '1'],
 
 sactions = {'Language' : ['Language', '1', [['ENG', '1'], ['RUS', '2'], ['ARB', '3']]],
             'Divisor Limit' : ['Divisor Limit', '2', ['Enter new Divisor Limit:']],
-            'Reset Installation' : ['Reset Installation', '3']}
+            'Hide Menu' : ['Hide Menu', '3', {'1' : 'on', '0' : 'off'}],
+            'Reset Installation' : ['Reset Installation', '4']}
